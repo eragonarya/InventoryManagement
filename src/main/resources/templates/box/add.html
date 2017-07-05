@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::navigation"></nav>
+<div th:each="item:${items}">
+    <div th:text="${item.id} + ' ' + ${item.name}"></div>
+</div>
+<div>
+    <form th:method="post">
+        <input type="number" name="itemId"/>
+        <input type="submit" value="Add Item"/>
+    </form>
+</div>
+</body>
+</html>

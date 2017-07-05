@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::nav"></nav>
+<div th:each="box:${boxes}">
+    <div th:text="'Box ' + ${box.id}"></div>
+    <a th:href="@{/box/{boxId}(boxId=${box.id})}">Edit</a>
+    <a th:href="@{/box/{boxId}/view(boxId=${box.id})}">View</a>
+</div>
+<a href="/box/addBox">Add Box</a>
+</body>
+</html>

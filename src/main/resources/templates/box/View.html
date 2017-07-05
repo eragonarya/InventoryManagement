@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::nav"></nav>
+<h3 th:text="'Viewing Box' + ${box.id}"></h3>
+<div th:each="item:${items}">
+    <label th:text="${item.id} + ' ' + ${item.name}"></label>
+</div>
+</body>
+</html>
