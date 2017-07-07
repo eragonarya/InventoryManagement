@@ -7,8 +7,20 @@
 <body>
 <nav th:replace="fragments::nav"></nav>
 <h3 th:text="'Viewing Box' + ${box.id}"></h3>
-<div th:each="item:${items}">
-    <label th:text="${item.id} + ' ' + ${item.name}"></label>
-</div>
+<table border="2px" cellspacing="10px">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+    <tr th:each="item:${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:each="quantity:${quantities}" th:if="${quantity.item.equals(item)}" th:text="${quantity.quantity}">
+        </td>
+    </tr>
+</table>
 </body>
 </html>

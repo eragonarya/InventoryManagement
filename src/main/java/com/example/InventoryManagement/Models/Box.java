@@ -8,11 +8,15 @@ import java.util.List;
  */
 @Entity
 public class Box {
+    public Box(){}
     @Id
     @GeneratedValue
     private int id;
     @ManyToMany
     private List<Item> items;
+    @OneToMany
+    @JoinColumn(name="box_id")
+    private List<Quantity> quantities;
 
 
     public int getId() {
@@ -29,5 +33,12 @@ public class Box {
 
     public void add(Item item){
         items.add(item);
+    }
+    public void remove(Item item){
+        for(int i = 0; i < items.size(); i++){
+            if(items.get(i).equals(item)){
+                items.remove(i);
+            }
+        }
     }
 }

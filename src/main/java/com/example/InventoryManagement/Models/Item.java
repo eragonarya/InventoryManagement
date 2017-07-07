@@ -9,7 +9,7 @@ import java.util.List;
  */
 @Entity
 public class Item {
-
+    public Item(){}
     @Id
     @GeneratedValue
     private int id;
@@ -20,6 +20,9 @@ public class Item {
     private double price;
     @ManyToMany(mappedBy = "items")
     private List<Box> boxes;
+    @OneToMany
+    @JoinColumn(name="item_id")
+    private List<Quantity> quantities;
 
     public int getId() {
         return id;
@@ -54,5 +57,19 @@ public class Item {
     }
     public void add(Box box){
         boxes.add(box);
+    }
+
+    @Override
+    public String toString(){
+        String out = "Item name: " + getName() + "\nItem ID: " + getId();
+        return out;
+    }
+    @Override
+    public boolean equals(Object object){
+        if(!(object instanceof Item)){
+            return false;
+        }
+        Item i = (Item)object;
+        return Integer.compare(getId(), i.getId()) == 0;
     }
 }

@@ -5,15 +5,30 @@
     <title th:text="${title}">Default</title>
 </head>
 <body>
-<nav th:replace="fragments::navigation"></nav>
-<div th:each="item:${items}">
-    <div th:text="${item.id} + ' ' + ${item.name}"></div>
-</div>
-<div>
-    <form th:method="post">
-        <input type="number" name="itemId"/>
-        <input type="submit" value="Add Item"/>
-    </form>
-</div>
+<nav th:replace="fragments::nav"></nav>
+<table>
+    <tr>
+        <th>Item Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Edit</th>
+    </tr>
+    <tr th:each="item:${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:each="quantity:${quantities}" th:if="${quantity.item.equals(item)}" th:text="${quantity.quantity}"></td>
+        <td th:each="quantity:${quantities}" th:unless="${quantity.getItem().equals(item)}">None</td>
+        <td th:unless="${quantities}">None</td>
+        <td>
+            <form th:unless="${box.getItems().contains(item)}" th:action="@{/box/{boxId}/{itemId}/add(boxId=${box.id}, itemId=${item.id})}" method="post">
+                <input type="number" name="qty"/>
+                <input type="submit" value="Add Item"/>
+            </form>
+            <a th:if="${box.items.contains(item)}" th:href="@{/box/{boxId}/{itemId}/remove(boxId=${box.id}, itemId=${item.id})}">Remove</a>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

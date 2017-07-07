@@ -6,21 +6,15 @@
 </head>
 <body>
 <nav th:replace="fragments::nav"></nav>
-<div th:each="i:${items}">
-    <p th:text="${i.name} + ' ' + ${i.price}"></p>
-</div>
-<div>
-    <form method="post" th:object="${item}">
-        <div>
-            <label th:for="name">Name</label>
-            <input type="text" th:field="*{name}"/>
-        </div>
-        <div>
-            <label th:for="price">Price</label>
-            <input type="text" th:field="*{price}"/>
-        </div>
-        <input type="submit" value="Add Item"/>
-    </form>
-</div>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+    <tr th:each="i:${items}">
+        <td th:text="${i.name}"></td>
+        <td th:text="${i.price}"></td>
+    </tr>
+</table>
 </body>
 </html>

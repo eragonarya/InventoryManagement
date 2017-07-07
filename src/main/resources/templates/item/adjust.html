@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::nav"></nav>
+<div th:each="item:${items}">
+    <form action="/remove" method="post">
+        <div th:text="${item.id} + ' ' + ${item.name}"></div>
+        <input type="submit" value="Remove"/>
+        <input type="hidden" name="itemId" th:value="${item.id}"/>
+    </form>
+</div>
+<div>
+    <form th:object="${item}" action="/add" method="post">
+        <label th:for="name">Name</label><input type="text" th:field="*{name}"/>
+        <label th:for="price">Price</label><input type="text" th:field="*{price}"/>
+        <input type="submit" value="Add Item"/>
+    </form>
+</div>
+</body>
+</html>
