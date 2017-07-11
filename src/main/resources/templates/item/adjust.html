@@ -6,18 +6,42 @@
 </head>
 <body>
 <nav th:replace="fragments::nav"></nav>
-<div th:each="item:${items}">
-    <form action="/remove" method="post">
-        <div th:text="${item.id} + ' ' + ${item.name}"></div>
-        <input type="submit" value="Remove"/>
-        <input type="hidden" name="itemId" th:value="${item.id}"/>
-    </form>
-</div>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Remove</th>
+    </tr>
+    <tr th:each="item:${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.qty}"></td>
+        <td>
+            <form action="/remove" method="post">
+                <input type="submit" value="Remove"/>
+                <input type="hidden" name="itemId" th:value="${item.id}"/>
+            </form>
+        </td>
+    </tr>
+</table>
+<br/>
+<br/>
+<h3>Add Item</h3>
 <div>
     <form th:object="${item}" action="/add" method="post">
         <label th:for="name">Name</label><input type="text" th:field="*{name}"/>
         <label th:for="price">Price</label><input type="text" th:field="*{price}"/>
+        <label th:for="qty">Quantity</label><input type="number" th:field="*{qty}"/>
         <input type="submit" value="Add Item"/>
+    </form>
+</div>
+<h3>Adjust Item</h3>
+<div>
+    <form action="/edit" method="post">
+        <label>Enter the ID of the item:</label><input name="Id" type="number"/>
+    <label>Enter the new Quantity:</label><input name="NewQuantity" type="number"/>
+        <input type="submit" value="Change Item"/>
     </form>
 </div>
 </body>

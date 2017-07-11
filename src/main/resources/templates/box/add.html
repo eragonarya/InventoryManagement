@@ -18,7 +18,13 @@
         <td th:text="${item.id}"></td>
         <td th:text="${item.name}"></td>
         <td th:text="${item.price}"></td>
-        <td th:each="quantity:${quantities}" th:if="${quantity.item.equals(item)}" th:text="${quantity.quantity}"></td>
+        <td th:each="quantity:${quantities}" th:if="${quantity.getItem().equals(item)}">
+            <form method="post" action="/box/edit">
+                <input name="newQuantity" th:value="${quantity.quantity}" type="number"/>
+                <input type="hidden" th:value="${item.id}" name="Id"/>
+                <input type="hidden" th:value="${box.id}" name="boxId"/>
+            </form>
+        </td>
         <td th:each="quantity:${quantities}" th:unless="${quantity.getItem().equals(item)}">None</td>
         <td th:unless="${quantities}">None</td>
         <td>

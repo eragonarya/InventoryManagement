@@ -100,6 +100,16 @@ public class BoxController {
         boxDao.save(box);
         return "redirect:/box/" + boxId + "/view";
     }
+    @RequestMapping(value="edit", method = RequestMethod.POST)
+    public String editQuantity(@RequestParam int Id, @RequestParam int newQuantity, @RequestParam int boxId){
+        for(Quantity q: quantityDao.findAll()){
+            if(q.getItem().getId()==Id && q.getBox().getId() == boxId){
+                q.setQuantity(newQuantity);
+                quantityDao.save(q);
+            }
+        }
+        return "redirect:";
+    }
     @RequestMapping(value="{boxId}/view", method = RequestMethod.GET)
     public String viewBox(Model model, @PathVariable int boxId){
         List<Quantity> qty = new ArrayList<>();

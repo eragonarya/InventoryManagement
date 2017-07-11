@@ -10,10 +10,12 @@
     <tr>
         <th>Name</th>
         <th>Price</th>
+        <th>Quantity</th>
     </tr>
     <tr th:each="i:${items}">
         <td th:text="${i.name}"></td>
         <td th:text="${i.price}"></td>
+        <td th:text="${i.qty}"></td>
     </tr>
 </table>
 </body>

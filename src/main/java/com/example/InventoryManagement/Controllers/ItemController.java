@@ -3,6 +3,7 @@ package com.example.InventoryManagement.Controllers;
 import com.example.InventoryManagement.Models.Box;
 import com.example.InventoryManagement.Models.Data.BoxDao;
 import com.example.InventoryManagement.Models.Data.ItemDao;
+import com.example.InventoryManagement.Models.Data.QuantityDao;
 import com.example.InventoryManagement.Models.Item;
 import com.example.InventoryManagement.Models.Quantity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class ItemController {
     BoxDao boxDao;
     @Autowired
     ItemDao itemDao;
+    @Autowired
+    QuantityDao quantityDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model){
@@ -32,9 +35,16 @@ public class ItemController {
     }
     @RequestMapping(value="add", method = RequestMethod.POST)
     public String addItem(Model model, @ModelAttribute Item item){
-        model.addAttribute("title", "Item Menu");
-        model.addAttribute("items", itemDao.findAll());
-        model.addAttribute("item", item);
+            model.addAttribute("title", "Item Menu");
+            model.addAttribute("items", itemDao.findAll());
+            model.addAttribute("item", item);
+            itemDao.save(item);
+        return "redirect:";
+    }
+    @RequestMapping(value="edit", method = RequestMethod.POST)
+    public String editQuantity(@RequestParam int Id, @RequestParam int NewQuantity){
+        Item item = itemDao.findOne(Id);
+        item.setQty(NewQuantity);
         itemDao.save(item);
         return "redirect:";
     }
@@ -44,6 +54,11 @@ public class ItemController {
         model.addAttribute("items", itemDao.findAll());
         for(Box box:boxDao.findAll()){
             if(box.getItems().contains(itemDao.findOne(itemId))){
+                for(Quantity quantity: quantityDao.findAll()){
+                    if(quantity.getItem().getId()==itemId && quantity.getBox().getId() == box.getId()){
+                        quantityDao.delete(quantity);
+                    }
+                }
                 box.remove(itemDao.findOne(itemId));
             }
         }
