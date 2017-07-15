@@ -18,6 +18,8 @@ public class Box {
     @JoinColumn(name="box_id")
     private List<Quantity> quantities;
 
+    @ManyToOne
+    private Location location;
 
     public int getId() {
         return id;
@@ -29,6 +31,14 @@ public class Box {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public void add(Item item){

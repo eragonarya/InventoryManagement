@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::nav"></nav>
+<div>
+    <table>
+        <tr th:each="side:${sides}">
+            <td>
+                <form th:action="@{/location/{side}(side=${side.toString()})}" method = "post">
+                    <input type="submit" th:value="${side}"/>
+                    <input type="hidden" name="side" th:value="${side}"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<a href="/location/newLocation">Add Store Section</a>
+</body>
+</html>

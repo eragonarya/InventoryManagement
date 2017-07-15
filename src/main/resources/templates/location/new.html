@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::navigation"></nav>
+<div>
+    <form th:object="${location}" method="post">
+        <label th:for="side">Side</label>
+        <select th:field="*{side}">
+            <option th:each="side:${sides}" th:value="${side}" th:text="${side.toString()}"></option>
+        </select>
+        <label th:for="row">Row</label>
+        <input type="number" th:field="*{row}"/>
+        <label th:for="section">Section</label>
+        <input type="number" th:field="*{section}"/>
+        <input type="submit" value="Add Location"/>
+    </form>
+</div>
+</body>
+</html>

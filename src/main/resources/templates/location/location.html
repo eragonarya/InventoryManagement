@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Default</title>
+</head>
+<body>
+<nav th:replace="fragments::nav"></nav>
+<h3 th:text="${title}"></h3>
+<table>
+    <tr>
+        <th>Box</th>
+    </tr>
+    <tr th:each="box:${boxes}">
+        <td th:text="${box.id}"></td>
+    </tr>
+</table>
+<div>
+    <div>Add Box to this Location</div>
+    <form action="/location/addBox" method="post">
+        <label>Enter BoxId:</label><input type="number" name="boxId" />
+        <input type="submit" value="Add Box"/>
+        <input type="hidden" th:value="${locationId}" name="locationId"/>
+    </form>
+</div>
+</body>
+</html>
