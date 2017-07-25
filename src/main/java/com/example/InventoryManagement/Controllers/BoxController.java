@@ -48,57 +48,99 @@ public class BoxController {
     @RequestMapping(value="{boxId}", method = RequestMethod.GET)
     public String editBox(Model model, @PathVariable int boxId){
         Box box = boxDao.findOne(boxId);
-        ArrayList<Quantity> qty = new ArrayList<>();
-        for(Quantity quantity:quantityDao.findAll()){
-            if(quantity.getBox().equals(box)){
-                qty.add(quantity);
+        if(box != null) {
+            ArrayList<Quantity> qty = new ArrayList<>();
+            for (Quantity quantity : quantityDao.findAll()) {
+                if (quantity.getBox().equals(box)) {
+                    qty.add(quantity);
+                }
             }
+            if (qty.size() == 0) {
+                qty = null;
+            }
+            model.addAttribute("items", itemDao.findAll());
+            model.addAttribute("title", "Edit Box");
+            model.addAttribute("box", boxDao.findOne(boxId));
+            model.addAttribute("quantities", qty);
+            return "box/add";
         }
-        if(qty.size() == 0){
-            qty = null;
+        else{
+            String error = "The box you entered doesn't exist. Please look at the Box Id and try again.";
+            model.addAttribute("title", "Error has occurred with the Box Id");
+            model.addAttribute("error", error);
+            return "error";
         }
-        model.addAttribute("items", itemDao.findAll());
-        model.addAttribute("title", "Edit Box");
-        model.addAttribute("box", boxDao.findOne(boxId));
-        model.addAttribute("quantities", qty);
-        return "box/add";
     }
     @RequestMapping(value="{boxId}/{itemId}/add", method = RequestMethod.POST)
     public String processEdit(Model model, @PathVariable int boxId, @PathVariable int itemId, @RequestParam int qty){
         Box box = boxDao.findOne(boxId);
         Item item = itemDao.findOne(itemId);
-        Quantity quantity = new Quantity();
-        quantity.setQuantity(qty);
-        quantity.setBox(box);
-        quantity.setItem(item);
+        if(box != null && item!= null) {
+            Quantity quantity = new Quantity();
+            quantity.setQuantity(qty);
+            quantity.setBox(box);
+            quantity.setItem(item);
 
-        boolean isUnique = true;
-        for(Item i: boxDao.findOne(boxId).getItems()){
-            if(i.getId() == itemId){
-                isUnique = false;
+            boolean isUnique = true;
+            for (Item i : boxDao.findOne(boxId).getItems()) {
+                if (i.getId() == itemId) {
+                    isUnique = false;
+                }
             }
+            if (isUnique) {
+                box.add(item);
+                quantityDao.save(quantity);
+                boxDao.save(box);
+            }
+            return "redirect:/box/" + boxId + "/view";
+        } else if(box != null && item == null){
+            String error = "The item Id you entered doesn't exist. Please look at the Item Id and try again.";
+            model.addAttribute("error", error);
+            model.addAttribute("title", "Error has occurred with the Item Id");
+            return "error";
+        } else if(box == null && item != null){
+            String error = "The box Id you entered doesn't exist. Please look at the Box Id and try again.";
+            model.addAttribute("title", "Error has occurred with the Box Id");
+            model.addAttribute("error", error);
+            return "error";
+        } else{
+            String error = "The box Id and the Item id you entered doesn't exist. Please look at both Ids and try again.";
+            model.addAttribute("title", "Error has occurred with the Box Id and the Item Id");
+            model.addAttribute("error", error);
+            return "error";
         }
-        if(isUnique){
-            box.add(item);
-            quantityDao.save(quantity);
-            boxDao.save(box);
-        }
-        return "redirect:/box/" + boxId + "/view";
     }
     @RequestMapping(value="{boxId}/{itemId}/remove", method = RequestMethod.GET)
     public String removeItemBox(Model model, @PathVariable int boxId, @PathVariable int itemId){
         Box box = boxDao.findOne(boxId);
         Item item = itemDao.findOne(itemId);
-        for(Quantity quantity : quantityDao.findAll()){
-            if(quantity.getBox().equals(box)){
-                if(quantity.getItem().equals(item)){
-                    quantityDao.delete(quantity);
+        if(box != null && item != null) {
+            for (Quantity quantity : quantityDao.findAll()) {
+                if (quantity.getBox().equals(box)) {
+                    if (quantity.getItem().equals(item)) {
+                        quantityDao.delete(quantity);
+                    }
                 }
             }
+            box.remove(item);
+            boxDao.save(box);
+            return "redirect:/box/" + boxId + "/view";
+        } else if(box != null && item == null){
+            String error = "The item Id you entered doesn't exist. Please look at the Item Id and try again.";
+            model.addAttribute("error", error);
+            model.addAttribute("title", "Error has occurred with the Item Id");
+            return "error";
+        } else if(box == null && item != null){
+            String error = "The box Id you entered doesn't exist. Please look at the Box Id and try again.";
+            model.addAttribute("title", "Error has occurred with the Box Id");
+            model.addAttribute("error", error);
+            return "error";
+        } else{
+            String error = "The box Id and the Item id you entered doesn't exist. Please look at both Ids and try again.";
+            model.addAttribute("title", "Error has occurred with the Box Id and the Item Id");
+            model.addAttribute("error", error);
+            return "error";
         }
-        box.remove(item);
-        boxDao.save(box);
-        return "redirect:/box/" + boxId + "/view";
     }
     @RequestMapping(value="edit", method = RequestMethod.POST)
     public String editQuantity(@RequestParam int Id, @RequestParam int newQuantity, @RequestParam int boxId){
@@ -128,9 +170,17 @@ public class BoxController {
     }
     @RequestMapping(value="{boxId}/delete", method = RequestMethod.GET)
     public String deleteBox(@PathVariable int boxId, Model model) {
-        boxDao.delete(boxDao.findOne(boxId));
-        model.addAttribute("title", "Box Menu");
-        model.addAttribute("boxes", boxDao.findAll());
-        return "redirect:/box/";
+        Box box = boxDao.findOne(boxId);
+        if(box != null) {
+            boxDao.delete(boxDao.findOne(boxId));
+            model.addAttribute("title", "Box Menu");
+            model.addAttribute("boxes", boxDao.findAll());
+            return "redirect:/box/";
+        } else{
+            String error = "The box Id you entered doesn't exist. Please look at the Box Id and try again.";
+            model.addAttribute("title", "Error occured with the Box Id");
+            model.addAttribute("error", error);
+            return "error";
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.example.InventoryManagement.Models.Data.BoxDao;
 import com.example.InventoryManagement.Models.Data.LocationDao;
 import com.example.InventoryManagement.Models.Data.StoreLocations;
 import com.example.InventoryManagement.Models.Location;
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,17 +51,21 @@ public class LocationController {
     public String chooseAisle(@PathVariable StoreLocations side, Model model){
         List<Integer> aisles = new ArrayList<>();
         List<Location> rows = new ArrayList<>();
-        for(Location l:locationDao.findAll()){
+        ArrayList<Location> locations = new ArrayList<>();
+        for(Location l: locationDao.findAll()){
+            locations.add(l);
+        }
+        locations.sort(Location::compareTo);
+        for(Location l:locations){
             if(l.getSide() == side){
-                rows.add(l);
-            }
+                            rows.add(l);
+                        }
         }
         for(Location r: rows){
             if(!aisles.contains(r.getRow())){
                 aisles.add(r.getRow());
             }
         }
-        Collections.sort(aisles);
         model.addAttribute("title", "Location Menu");
         model.addAttribute("rows", rows);
         model.addAttribute("aisles", aisles);
@@ -107,7 +110,7 @@ public class LocationController {
         }else{
             String error = "The box you have entered doesn't exist. Please look at the Box Id you wish to use and try again.";
             model.addAttribute("error", error);
-            model.addAttribute("title", "Error has occurred");
+            model.addAttribute("title", "Error has occurred with the Box Id");
             return "error";
         }
     }

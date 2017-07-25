@@ -9,10 +9,7 @@ import com.example.InventoryManagement.Models.Quantity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Cody on 7/4/2017.
@@ -33,6 +30,19 @@ public class ItemController {
         model.addAttribute(new Item());
         return "item/index";
     }
+    @RequestMapping(value="{itemId}", method = RequestMethod.GET)
+    public String itemDetails(Model model, @PathVariable int itemId){
+        int away = 0;
+        for(Quantity q:quantityDao.findAll()){
+            if(q.getItem().getId() == itemId){
+                away += q.getQuantity();
+            }
+        }
+        model.addAttribute("title", itemDao.findOne(itemId).getName());
+        model.addAttribute("item", itemDao.findOne(itemId));
+        model.addAttribute("away", away);
+        return "item/info";
+    }
     @RequestMapping(value="add", method = RequestMethod.POST)
     public String addItem(Model model, @ModelAttribute Item item){
             model.addAttribute("title", "Item Menu");
@@ -42,11 +52,18 @@ public class ItemController {
         return "redirect:";
     }
     @RequestMapping(value="edit", method = RequestMethod.POST)
-    public String editQuantity(@RequestParam int Id, @RequestParam int NewQuantity){
+    public String editQuantity(Model model, @RequestParam int Id, @RequestParam int NewQuantity){
         Item item = itemDao.findOne(Id);
-        item.setQty(NewQuantity);
-        itemDao.save(item);
-        return "redirect:";
+        if(item != null) {
+            item.setQty(NewQuantity);
+            itemDao.save(item);
+            return "redirect:";
+        } else{
+            String error = "The item Id you entered doesn't exist. Please look at the Item Id and try again";
+            model.addAttribute("title", "Error has occurred with the Item Id");
+            model.addAttribute("error", error);
+            return "error";
+        }
     }
     @RequestMapping(value="remove", method = RequestMethod.POST)
     public String removeItem(Model model, @RequestParam int itemId){

@@ -4,12 +4,12 @@ package com.example.InventoryManagement.Models.Data;
  * Created by Cody on 7/12/2017.
  */
 public enum StoreLocations {
-    RGT("RGT"),
+    CEN("CEN"),
+    FRT("FRT"),
+    FST("FST"),
     LFT("LFT"),
     RCV("RCV"),
-    CEN("CEN"),
-    FST("FST"),
-    FRT("FRT");
+    RGT("RGT");
 
     private final String side;
 

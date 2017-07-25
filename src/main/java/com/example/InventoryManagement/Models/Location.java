@@ -4,6 +4,7 @@ import com.example.InventoryManagement.Models.Data.StoreLocations;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,5 +72,21 @@ public class Location {
         Location l = (Location)object;
         return Integer.compare(this.row, l.getRow()) == 0 && Integer.compare(this.section, l.getSection())== 0 &&
         this.side.equals(l.getSide());
+    }
+
+    public int compareTo(Location location){
+        if(this.row > location.getRow()){
+            return 1;
+        } else if(this.row == location.getRow()){
+            if(this.section > location.getSection()){
+                return 1;
+            } else if(this.section == location.getSection()){
+                return 0;
+            } else{
+                return -1;
+            }
+        } else{
+            return -1;
+        }
     }
 }
